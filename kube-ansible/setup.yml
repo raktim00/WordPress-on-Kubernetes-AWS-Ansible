@@ -1,0 +1,35 @@
+- hosts: localhost
+  gather_facts: no
+  vars_files:
+        - cred.yml
+  tasks:
+    - name: Running EC2 Role
+      include_role:
+        name: ec2
+
+- hosts: nfs_node
+  tasks:
+    - name: Running NFS Server Role
+      include_role:
+        name: nfs-server
+
+- hosts: ec2_master
+  gather_facts: no
+  tasks:
+    - name: Running K8s Master Role
+      include_role:
+        name: k8s_master
+
+- hosts: ec2_slave
+  gather_facts: no
+  tasks:
+    - name: Running K8s Slave Role
+      include_role:
+        name: k8s_slave
+
+- hosts: ec2_master
+  gather_facts: no
+  tasks:
+    - name: Running Kube WordPress Role
+      include_role:
+        name: kube-wordpress

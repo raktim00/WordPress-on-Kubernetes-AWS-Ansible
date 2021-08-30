@@ -1,0 +1,25 @@
+---
+# tasks file for nfs-server
+- name: Creating mountable shared folders
+  file: 
+    path: "{{ item }}"
+    state: directory
+  loop: "{{ shared_dir }}"
+
+- name: Install nfs utils
+  package:
+    name: nfs-utils
+    state: present
+
+- name: Configure nfs server
+  copy:
+    dest: /etc/exports
+    content: |
+      {{ shared_dir[0] }} *(rw,no_root_squash)
+      {{ shared_dir[1] }} *(rw,no_root_squash)
+
+- name: Starting nfs server
+  service:
+    name: nfs-server 
+    state: started
+    enabled: yes
